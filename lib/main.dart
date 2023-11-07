@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
             onPressed: () async {
               await createExcel(context);
             },
-            child: Text('Share Excel File'),
+            child: const Text('Share Excel File'),
           ),
         ),
       ),
@@ -37,16 +37,16 @@ class MyApp extends StatelessWidget {
 Future<void> createExcel(context) async {
   var excel = Excel.createExcel();
   var sheet = excel['Sheet1'];
-
+  String persenate = '0';
   // Membuat header untuk 70 kolom
   for (int col = 0; col < 70; col++) {
     sheet
         .cell(CellIndex.indexByColumnRow(rowIndex: 0, columnIndex: col))
         .value = "Kolom $col";
   }
-
   // Membuat 6000 baris data contoh
   for (int row = 1; row <= 6000; row++) {
+    print('loading: ${row / 6000 / 100}%');
     for (int col = 0; col < 70; col++) {
       sheet
           .cell(CellIndex.indexByColumnRow(rowIndex: row, columnIndex: col))
@@ -62,6 +62,7 @@ Future<void> createExcel(context) async {
     ..writeAsBytesSync(excel.encode()!);
 
   print("File Excel berhasil dibuat di $filePath");
+
   // Berbagi file Excel
   await Share.shareXFiles(
     [XFile(filePath)],
